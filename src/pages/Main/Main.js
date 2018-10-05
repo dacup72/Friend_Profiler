@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import friendsData from "../../FriendsData.json";
+import FriendCard from "../../components/FriendCard";
 
 class Main extends Component {
   state = {
@@ -11,9 +12,13 @@ class Main extends Component {
       <Fragment>
         {this.state.friendsData.map(friend => {
           return (
-            <div>
-              {friend.name}
-            </div>
+            <FriendCard 
+              key={friend._id}
+              name={friend.name}
+              company={friend.company}
+              age={friend.age}
+              picture={friend.picture}
+            />
           )
         })}
       </Fragment>
