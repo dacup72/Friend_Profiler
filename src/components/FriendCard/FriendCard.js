@@ -17,6 +17,7 @@ const FriendCard = props => {
                 <li>Age: {props.age}</li>
                 <li>Company: {props.company}</li>
               </ul>
+              <button onClick={() => props.handleMap(props.coords, props.name)}>View Map</button>
             </div>
           </div>
         </div>  

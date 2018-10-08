@@ -1,5 +1,9 @@
 .marker {
   background-color: red;
-  height: 20px;
+  color: black;
+  border-radius: 50%;
+  height: 50px;
   width: 50px;
+  text-align: center;
+  line-height: 25px;
 }

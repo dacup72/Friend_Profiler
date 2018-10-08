@@ -6,20 +6,30 @@ import MapView from "../../components/Map";
 
 class Main extends Component {
   state = {
-    friendsData
+    friendsData,
+    currentCoords: "",
+    currentName: "",
+    revealMap: false
   }
 
-  // componentWillMount() {
-  //   API.findAll().then(function(me) {
-  //     console.log("TEST======  ", me)
-  //     this.setState({
-  //       friendsData: me
-  //     })
-  //   })
-  // }
+  handleMap = (coords, name) => {
+    this.setState({
+      currentCoords: coords,
+      currentName: name,
+      revealMap: true
+    })
+  }
+
+  handleCloseMap = () => {
+    this.setState({
+      currentCoords: "",
+      currentName: "",
+      revealMap: false
+    })
+  }
 
   renderContent = () => {
-    if (false) {
+    if (!this.state.revealMap) {
       return (
         <div className="row">
           {this.state.friendsData.map(friend => {
@@ -30,6 +40,8 @@ class Main extends Component {
                 company={friend.company}
                 age={friend.age}
                 picture={friend.picture}
+                handleMap={this.handleMap}
+                coords={{lat: friend.latitude, lng: friend.longitude}}
               />
             )
           })}
@@ -39,7 +51,9 @@ class Main extends Component {
     else {
       return (
         <MapView 
-          markerData={this.state.friendsData}
+          coords={this.state.currentCoords}
+          name={this.state.currentName}
+          handleCloseMap={this.handleCloseMap}
         />
       )
     }
