@@ -4,8 +4,7 @@ import "./FriendCard.css";
 const FriendCard = props => {
   return (
     <Fragment>
-      <div className="row" key={props.key}>
-        <div className="col s12 m6">
+        <div className="col s6 m3" key={props.key}>
           <div className="card">
             <div className="card-image">
               <img src={props.picture} alt="Friend" />
@@ -20,8 +19,7 @@ const FriendCard = props => {
               </ul>
             </div>
           </div>
-        </div>
-      </div>
+        </div>  
     </Fragment>
   )
 }
