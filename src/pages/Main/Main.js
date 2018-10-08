@@ -6,10 +6,15 @@ import MapView from "../../components/Map";
 
 class Main extends Component {
   state = {
-    friendsData,
+    friendsData: [],
     currentCoords: "",
     currentName: "",
-    revealMap: false
+    revealMap: false,
+    friendsLoaded: 0
+  }
+
+  componentWillMount() {
+    this.handleLoadMoreBtn();
   }
 
   handleMap = (coords, name) => {
@@ -28,29 +33,48 @@ class Main extends Component {
     })
   }
 
+  handleLoadMoreBtn = () => {
+    let data = [];
+    let i = 0;
+    let limit = this.state.friendsLoaded + 10;
+
+    while (i < limit) {
+      data.push(friendsData[i]);
+      i++;
+    }
+
+    this.setState({
+      friendsData: data,
+      friendsLoaded: limit
+    })
+  }
+
   renderContent = () => {
     if (!this.state.revealMap) {
       return (
-        <div className="row">
-          {this.state.friendsData.map(friend => {
-            return (
-              <FriendCard
-                key={friend._id}
-                name={friend.name}
-                company={friend.company}
-                age={friend.age}
-                picture={friend.picture}
-                handleMap={this.handleMap}
-                coords={{lat: friend.latitude, lng: friend.longitude}}
-              />
-            )
-          })}
+        <div>
+          <div className="row">
+            {this.state.friendsData.map(friend => {
+              return (
+                <FriendCard
+                  key={friend._id}
+                  name={friend.name}
+                  company={friend.company}
+                  age={friend.age}
+                  picture={friend.picture}
+                  handleMap={this.handleMap}
+                  coords={{ lat: friend.latitude, lng: friend.longitude }}
+                />
+              )
+            })}
+          </div>
+          <button onClick={this.handleLoadMoreBtn}>Load More Friends</button>
         </div>
       )
-    } 
+    }
     else {
       return (
-        <MapView 
+        <MapView
           coords={this.state.currentCoords}
           name={this.state.currentName}
           handleCloseMap={this.handleCloseMap}
