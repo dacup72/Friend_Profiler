@@ -67,18 +67,23 @@ class App extends Component {
   }
 
   handleSubmit = () => {
-    const data = friendsData.filter(friend => friend[this.state.filterType].toString() === this.state.filterValue);
-    this.setState(
-      {
-        filteredFriends: data,
-        friendsLoaded: 0,
-        sortBy: this.state.filterType,
-        filterType: "",
-        filterValue: "",
-        filterResults: true
-      },
-      () => this.handleLoadMore(10, this.state.filterType, 0, false)
-    );
+    if (this.state.filterType && this.state.filterValue) {
+      const data = friendsData.filter(friend => friend[this.state.filterType].toString() === this.state.filterValue);
+      this.setState(
+        {
+          filteredFriends: data,
+          friendsLoaded: 0,
+          sortBy: this.state.filterType,
+          filterType: "",
+          filterValue: "",
+          filterResults: true
+        },
+        () => this.handleLoadMore(10, this.state.filterType, 0, false)
+      );
+    }
+    else {
+      alert("Invalid Filter Input");
+    }
   }
 
   render() {
@@ -91,6 +96,8 @@ class App extends Component {
               handleLoadMore={this.handleLoadMore}
               handleChange={this.handleChange}
               handleSubmit={this.handleSubmit}
+              filterValue={this.state.filterValue}
+              filterType={this.state.filterType}
             />
           )} />
           <Route exact path="/map" component={MapView} />
