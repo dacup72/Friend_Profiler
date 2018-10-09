@@ -4,9 +4,12 @@ import GoogleMapReact from 'google-map-react';
 import keys from '../../keys';
 import Marker from "../../components/Marker";
 
-const MapView = ({ location: { state: { data: { latitude, longitude, name } } } }) => (
+const MapView = ({ location: { state: { data, data: { latitude, longitude, name } } } }) => (
   <Fragment>
     <Link to="/"><button>Close Map</button></Link>
+    <Link to={{ pathname: "/details", state: { data } }}>
+      <button>View Details</button>
+    </Link>
     <div style={{ height: '80vh', width: '80%' }}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: keys.GOOGLE_MAPS_KEY }}

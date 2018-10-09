@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 
-const FriendDetails = ({ location: { state: { data: { name, about, balance, age, eyeColor, gender, company, email, phone } } } }) => (
+const FriendDetails = ({ location: { state: { data, data: { name, about, balance, age, eyeColor, gender, company, email, phone } } } }) => (
   <Fragment>
     <div className="col s12 m12">
       <div className="card blue-grey darken-1">
@@ -19,6 +19,9 @@ const FriendDetails = ({ location: { state: { data: { name, about, balance, age,
           <li>Phone: {phone}</li>
         </ul>
         <Link to="/"><button>Close Details</button></Link>
+        <Link to={{ pathname: "/map", state: { data } }}>
+            <button>View Map</button>
+        </Link>
       </div>
     </div>
   </Fragment>
