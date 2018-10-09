@@ -4,6 +4,7 @@ import friendsData from "../../FriendsData.json";
 import FriendCard from "../../components/FriendCard";
 import MapView from "../../components/Map";
 import FriendDetails from "../../components/FriendDetails";
+import Nav from "../../components/Nav";
 
 class Main extends Component {
   state = {
@@ -12,12 +13,30 @@ class Main extends Component {
     currentName: "",
     currentData: {},
     reveal: "cards",
-    friendsLoaded: 0
+    friendsLoaded: 0,
+    sortBy: "index"
   }
 
   componentWillMount() {
-    this.handleLoadMoreBtn();
+    this.handleLoadMoreBtn("index");
   }
+
+  handleNewSort = (sortBy) => {
+    this.handleLoadMoreBtn(sortBy, true);
+  }
+
+  dynamicSort = (property) => {
+    let sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+  }
+
 
   handleMap = (coords, name) => {
     this.setState({
@@ -35,19 +54,27 @@ class Main extends Component {
     })
   }
 
-  handleLoadMoreBtn = () => {
+  handleLoadMoreBtn = (sortBy, option) => {
     let data = [];
     let i = 0;
     let limit = this.state.friendsLoaded + 10;
+    let sortedData = friendsData;
+
+    sortedData = friendsData.sort(this.dynamicSort(sortBy));
+    
+    if(option) {
+      limit = this.state.friendsLoaded;
+    }
 
     while (i < limit) {
-      data.push(friendsData[i]);
+      data.push(sortedData[i]);
       i++;
     }
 
     this.setState({
       friendsData: data,
-      friendsLoaded: limit
+      friendsLoaded: limit,
+      sortBy: sortBy
     })
   }
 
@@ -80,7 +107,7 @@ class Main extends Component {
               )
             })}
           </div>
-          <button onClick={this.handleLoadMoreBtn}>Load More Friends</button>
+          <button onClick={() => this.handleLoadMoreBtn(this.state.sortBy)}>Load More Friends</button>
         </div>
       )
     }
@@ -107,6 +134,9 @@ class Main extends Component {
   render() {
     return (
       <Fragment>
+        <Nav 
+          handleNewSort={this.handleNewSort}
+        />
         {this.renderContent()}
       </Fragment>
     )
