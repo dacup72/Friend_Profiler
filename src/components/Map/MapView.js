@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
-import './MapPage.css';
+import './MapView.css';
 import GoogleMapReact from 'google-map-react';
 import keys from '../../keys';
 import Marker from "../Marker";
 
-const MapPage = props => {
+const MapView = props => {
   return (
     <Fragment>
     <button onClick={props.handleCloseMap}>Close Map</button>
@@ -25,4 +25,4 @@ const MapPage = props => {
   );
 }
 
-export default MapPage;
+export default MapView;

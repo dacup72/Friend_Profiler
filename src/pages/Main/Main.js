@@ -3,13 +3,15 @@ import React, { Component, Fragment } from "react";
 import friendsData from "../../FriendsData.json";
 import FriendCard from "../../components/FriendCard";
 import MapView from "../../components/Map";
+import FriendDetails from "../../components/FriendDetails";
 
 class Main extends Component {
   state = {
     friendsData: [],
     currentCoords: "",
     currentName: "",
-    revealMap: false,
+    currentData: {},
+    reveal: "cards",
     friendsLoaded: 0
   }
 
@@ -21,7 +23,7 @@ class Main extends Component {
     this.setState({
       currentCoords: coords,
       currentName: name,
-      revealMap: true
+      reveal: "map"
     })
   }
 
@@ -29,7 +31,7 @@ class Main extends Component {
     this.setState({
       currentCoords: "",
       currentName: "",
-      revealMap: false
+      reveal: "cards"
     })
   }
 
@@ -49,21 +51,31 @@ class Main extends Component {
     })
   }
 
+  handleDetailsClick = data => {
+    this.setState({
+      currentData: data,
+      reveal: "details"
+    })
+  }
+
+  handleDetailsClose = () => {
+    this.setState({
+      currentData: {},
+      reveal: "cards"
+    })
+  }
+
   renderContent = () => {
-    if (!this.state.revealMap) {
+    if (this.state.reveal === "cards") {
       return (
         <div>
           <div className="row">
             {this.state.friendsData.map(friend => {
               return (
                 <FriendCard
-                  key={friend._id}
-                  name={friend.name}
-                  company={friend.company}
-                  age={friend.age}
-                  picture={friend.picture}
+                  data={friend}
                   handleMap={this.handleMap}
-                  coords={{ lat: friend.latitude, lng: friend.longitude }}
+                  handleDetailsClick={this.handleDetailsClick}
                 />
               )
             })}
@@ -72,12 +84,20 @@ class Main extends Component {
         </div>
       )
     }
-    else {
+    else if(this.state.reveal === "map"){
       return (
         <MapView
           coords={this.state.currentCoords}
           name={this.state.currentName}
           handleCloseMap={this.handleCloseMap}
+        />
+      )
+    }
+    else if(this.state.reveal === "details") {
+      return (
+        <FriendDetails 
+          data={this.state.currentData}
+          handleDetailsClose={this.handleDetailsClose}
         />
       )
     }
