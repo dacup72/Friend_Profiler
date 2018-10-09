@@ -9,11 +9,13 @@ import FriendDetails from "./pages/FriendDetails";
 
 class App extends Component {
   state = {
+    filteredFriends: [],
     friendsData: [],
     friendsLoaded: 0,
     sortBy: "index",
     filterType: "",
-    filterValue: ""
+    filterValue: "",
+    filterResults: false
   }
 
   componentWillMount() {
@@ -35,16 +37,27 @@ class App extends Component {
     }
   }
 
-  handleLoadMore = (addBy, sortBy = this.state.sortBy, loaded = this.state.friendsLoaded, inputData) => {
+  handleLoadMore = (addBy, sortBy = this.state.sortBy, loaded = this.state.friendsLoaded, unFilter = true) => {
     const limit = loaded + addBy;
-    const data = inputData || friendsData;
-    const sortedData = friendsData.sort(this.dynamicSort(sortBy)).slice(0, limit);
 
-    this.setState({
-      friendsData: sortedData,
-      friendsLoaded: limit,
-      sortBy: sortBy
-    })
+    if (this.state.filterResults) {
+      const sortedData = this.state.filteredFriends.slice(0, limit);
+      this.setState({
+        friendsData: sortedData,
+        friendsLoaded: limit,
+        sortBy: sortBy
+      })
+    }
+    else if (unFilter) {
+      const sortedData = friendsData.sort(this.dynamicSort(sortBy)).slice(0, limit);
+      this.setState({
+        filteredFriends: [],
+        friendsData: sortedData,
+        friendsLoaded: limit,
+        sortBy: sortBy,
+        filterResults: false
+      })
+    }
   }
 
   handleChange = event => {
@@ -53,21 +66,20 @@ class App extends Component {
     });
   }
 
-
-  // TODO fix it
   handleSubmit = () => {
-    let data = [];
-    friendsData.map(element => {
-      if(element[this.state.filterType].toString() === this.state.filterValue) {
-        data.push(element)
-      }
-    })
-
-    this.handleLoadMore(0, null, 10, data);
+    const data = friendsData.filter(friend => friend[this.state.filterType].toString() === this.state.filterValue);
+    this.setState(
+      {
+        filteredFriends: data,
+        friendsLoaded: 0,
+        sortBy: this.state.filterType,
+        filterType: "",
+        filterValue: "",
+        filterResults: true
+      },
+      () => this.handleLoadMore(10, this.state.filterType, 0, false)
+    );
   }
-
-
-
 
   render() {
     return (
